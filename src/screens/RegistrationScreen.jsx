@@ -16,13 +16,16 @@ export default function RegistrationScreen() {
   const [isShow, setIsShow] = useState(false);
 
   return (
-    <View>
+    <View style={styles.wrapper}>
       <AddPhoto />
       <Text style={styles.title}>Реєстрація</Text>
 
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
-        verticalOffset={-100}
+        style={[
+          styles.keyboardAvoidingView,
+          { paddingBottom: isShow ? 10 : 0 },
+        ]}
       >
         <View>
           <TextInput
@@ -73,6 +76,10 @@ export default function RegistrationScreen() {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    alignItems: "center",
+  },
+
   title: {
     fontFamily: "Roboto-Medium",
     fontSize: 30,
@@ -150,5 +157,10 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 19,
     color: "rgba(27, 67, 113, 1)",
+  },
+
+  keyboardAvoidingView: {
+    justifyContent: "center",
+    paddingBottom: 0,
   },
 });
