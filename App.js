@@ -1,4 +1,10 @@
-import { StyleSheet, View, ImageBackground } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import RegistrationScreen from "./src/screens/RegistrationScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import { useFonts } from "expo-font";
@@ -15,16 +21,18 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <ImageBackground source={PhotoBG} style={styles.image}>
-        <View style={styles.overlay}>
-          <View style={styles.contentContainer}>
-            <RegistrationScreen />
-            {/* <LoginScreen /> */}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <ImageBackground source={PhotoBG} style={styles.image}>
+          <View style={styles.overlay}>
+            <View style={styles.contentContainer}>
+              <RegistrationScreen />
+              {/* <LoginScreen /> */}
+            </View>
           </View>
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 

@@ -5,45 +5,72 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import AddPhoto from "../components/AddPhoto";
 
-export default RegistrationScreen = () => (
-  <>
-    <AddPhoto />
+// {/*style={{ ...styles.form, marginTop: isShowKeyboard ? 0 : 147 }}> */}
 
-    <Text style={styles.title}>Реєстрація</Text>
+export default function RegistrationScreen() {
+  const [isShow, setIsShow] = useState(false);
 
-    <TextInput
-      style={styles.input}
-      placeholder="Логін"
-      placeholderTextColor="rgba(189, 189, 189, 1)"
-    ></TextInput>
-    <TextInput
-      style={styles.input}
-      placeholder="Адреса електронної пошти"
-      placeholderTextColor="rgba(189, 189, 189, 1)"
-    ></TextInput>
-    <View style={styles.viewLastImput}>
-      <TextInput
-        style={[styles.input, styles.inputLastMargin]}
-        placeholder="Пароль"
-        placeholderTextColor="rgba(189, 189, 189, 1)"
-      ></TextInput>
-      <TouchableOpacity style={styles.viewLastImputButton}>
-        <Text style={styles.viewLastImputText}>Показати</Text>
-      </TouchableOpacity>
+  return (
+    <View>
+      <AddPhoto />
+      <Text style={styles.title}>Реєстрація</Text>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        verticalOffset={-100}
+      >
+        <View>
+          <TextInput
+            style={styles.input}
+            placeholder="Логін"
+            placeholderTextColor="rgba(189, 189, 189, 1)"
+            onFocus={() => setIsShow(true)}
+            onBlur={() => setIsShow(false)}
+          ></TextInput>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Адреса електронної пошти"
+            placeholderTextColor="rgba(189, 189, 189, 1)"
+            onFocus={() => setIsShow(true)}
+            onBlur={() => setIsShow(false)}
+          ></TextInput>
+
+          <View style={styles.viewLastImput}>
+            <TextInput
+              style={[styles.input, styles.inputLastMargin]}
+              placeholder="Пароль"
+              placeholderTextColor="rgba(189, 189, 189, 1)"
+              onFocus={() => setIsShow(true)}
+              onBlur={() => setIsShow(false)}
+            ></TextInput>
+
+            <TouchableOpacity style={styles.viewLastImputButton}>
+              <Text style={styles.viewLastImputText}>Показати</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+
+      {!isShow && (
+        <TouchableOpacity style={styles.registerButton}>
+          <Text style={styles.registerButtonText}>Зареєстуватися</Text>
+        </TouchableOpacity>
+      )}
+
+      {!isShow && (
+        <TouchableOpacity style={styles.linkLogIn}>
+          <Text style={styles.textLogIn}>Вже є акаунт? Увійти</Text>
+        </TouchableOpacity>
+      )}
     </View>
-
-    <TouchableOpacity style={styles.registerButton}>
-      <Text style={styles.registerButtonText}>Зареєстуватися</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity style={styles.linkLogIn}>
-      <Text style={styles.textLogIn}>Вже є акаунт? Увійти</Text>
-    </TouchableOpacity>
-  </>
-);
+  );
+}
 
 const styles = StyleSheet.create({
   title: {
