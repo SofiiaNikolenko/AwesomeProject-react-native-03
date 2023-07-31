@@ -1,128 +1,178 @@
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import {View, StyleSheet,Pressable, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
-export default LoginScreen = () => (
-  <>
-    <Text style={styles.title}>Увійти</Text>
+export const LoginScreen = () => {
+    const [email, setEmail] = useState('') 
+    const [password, setPassword] = useState('') 
+    const [passwordVisibility, setPasswordVisibility] = useState(true);
 
-    <TextInput
-      style={styles.input}
-      placeholder="Адреса електронної пошти"
-      placeholderTextColor="rgba(189, 189, 189, 1)"
-    ></TextInput>
-    <View style={styles.viewLastImput}>
-      <TextInput
-        style={[styles.input, styles.inputLastMargin]}
-        placeholder="Пароль"
-        placeholderTextColor="rgba(189, 189, 189, 1)"
-      ></TextInput>
-      <TouchableOpacity style={styles.viewLastImputButton}>
-        <Text style={styles.viewLastImputText}>Показати</Text>
-      </TouchableOpacity>
-    </View>
+    const navigation = useNavigation()
+    const onLoginButtonPress = () => {
+           if(!email || !password){return}
+        console.log('Email:', email + ', Password:', password)
+        navigation.navigate('Home', {
+   screen: 'PostsScreen',
+   params: {email, password},
+})
+        }
+        
+    const toggleShowPassword = () => {
+               setPasswordVisibility(!passwordVisibility)
+       }
+        
+    
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
+                <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? '-250' : '-250'}
+                >
+                    <View style={styles.loginContainer}>
+                        <Text style={styles.h2}>Увійти</Text>
+                        <View style={styles.loginInputContainer}>
+                            <TextInput
+                                secureTextEntry={false}
+                                selectionColor='blue'
+                                inputMode='email'
+                                keyboardType='email-address'
+                                textContentType='emailAddress'
+                                placeholder="Адреса електронної пошти"
+                                placeholderTextColor='#BDBDBD'
+                                style={styles.loginInput}
+                                value={email}
+                                onChangeText={setEmail}
+                                 />
+                        </View>
+                        <View style={styles.loginInputContainer}>
+                            <TextInput
+                                maxLength={23}
+                                secureTextEntry={passwordVisibility}
+                                selectionColor='blue'
+                                keyboardType='visible-password'
+                                textContentType='password'
+                                placeholder="Пароль"
+                                placeholderTextColor='#BDBDBD'
+                                style={styles.loginInput}
+                                value={password}
+                                onChangeText={setPassword}
+                                enablesReturnKeyAutomatically={true}
+                            />
+                            <Pressable onPress={toggleShowPassword}
+                                       hitSlop={{ left: 40, bottom: 15, top: 15, right: 15 }}>
+                                  {passwordVisibility
+                                  ? <Text style={styles.textShowButton}>Показати</Text>
+                                  : <Text style={styles.textShowButton}>Сховати</Text>
+                                  }
+                            </Pressable>
+                        </View>
+                         <Pressable style={styles.buttonRegistration} onPress={onLoginButtonPress}>
+                                     <Text style={styles.buttonText}>Увійти</Text>
+                        </Pressable>
+                        <View style={styles.underButtonTextContainer}>
+                              <Text style={styles.textUnderButton}>Немає акаунту?</Text>
+                              <Pressable onPress={()=>navigation.navigate('Registration')} hitSlop={{ left: 10, bottom: 15, top: 15, right: 15 }}>
+                                  <Text style={styles.textUnderButton}>Зареєструватися</Text>
+                              </Pressable>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+            </View>
+        </TouchableWithoutFeedback>
+           
+    )
+}
 
-    <TouchableOpacity style={styles.enterButton}>
-      <Text style={styles.enterButtonText}>Увійти</Text>
-    </TouchableOpacity>
-
-    <TouchableOpacity style={styles.linkLogIn}>
-      <Text style={styles.textSignUp}>
-        Немає акаунту?
-        <Text style={[styles.textSignUp, styles.textSignUpUnderlin]}>
-          Зареєструватися
-        </Text>
-      </Text>
-    </TouchableOpacity>
-  </>
-);
 
 const styles = StyleSheet.create({
-  title: {
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    fontWeight: "500",
-    lineHeight: 35,
-    marginTop: 32,
-    marginBottom: 33,
-  },
+    container: {
+            flex: 1,
+            justifyContent: "flex-end",
+    },
 
-  input: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    height: 50,
-    width: 343,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "rgba(232, 232, 232, 1)",
-    backgroundColor: "rgba(246, 246, 246, 1)",
-    paddingLeft: 16,
-    marginBottom: 16,
-  },
+        loginContainer: {
+            width: "100%",
+            height: 489,
+            backgroundColor: '#FFFFFF',
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            overflow:'hidden',
+            paddingTop:32,
+    },
+    h2: {
+            color: '#212121',
+            textAlign: 'center',
+            fontSize: 30,
+            fontFamily: 'Roboto',
+            fontWeight: 500,
+            letterSpacing: 0.3,
+            marginBottom: 33,
+    },
+        loginInputContainer: {
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent:'space-between',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: 16,
+            height: 50,
+            width: 343,
+            backgroundColor: '#E8E8E8',
+            paddingLeft: 16,
+            paddingTop: 15,
+            paddingBottom: 15,
+            paddingRight:15,
+            borderRadius: 10,
+        },
+    loginInput: {
+            width: 239,
+            fontSize: 16,
+            fontFamily: 'Roboto'
+        },
+    textShowButton: {
+            color: '#1B4371',
+            fontSize: 16,
+            fontFamily: 'Roboto',
+    },
+    buttonRegistration: {
+         marginTop: 27,
+         marginBottom: 16,
+            borderRadius: 100,
+            height: 51,
+            width: 343,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent:'center',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            fontFamily: 'Roboto',
+            fontSize: 16,
+            backgroundColor: '#FF6C00'
+        },
+    buttonText: {
+            color: '#FFFFFF',
+            fontFamily: 'Roboto',
+            fontSize: 16,
+    },
+     underButtonTextContainer:{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent:'center',
+     },
+    textUnderButton: {
+            color: '#1B4371',
+            textAlign: 'center',
+            fontSize: 16,
+            fontFamily: 'Roboto',
+        },
+    registrationLink:{
+            textDecorationLine:'underline'
+    }
+})
 
-  inputLastMargin: {
-    marginBottom: 43,
-  },
-
-  visibleButton: {
-    height: 5,
-    width: 20,
-  },
-
-  viewLastImput: {
-    position: "relative",
-  },
-
-  viewLastImputButton: {
-    position: "absolute",
-    top: 16,
-    right: 16,
-  },
-
-  viewLastImputText: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    color: "rgba(27, 67, 113, 1)",
-  },
-
-  enterButton: {
-    backgroundColor: "rgba(255, 108, 0, 1)",
-    borderRadius: 100,
-    marginBottom: 16,
-  },
-
-  enterButtonText: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    color: "rgba(255, 255, 255, 1)",
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingRight: 111,
-    paddingLeft: 111,
-  },
-
-  linkLogIn: {},
-
-  textSignUp: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    color: "rgba(27, 67, 113, 1)",
-  },
-
-  textSignUpUnderlin: {
-    textDecorationLine: "underline",
-  },
-});
+export default LoginScreen

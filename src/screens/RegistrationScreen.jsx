@@ -1,166 +1,215 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import AddPhoto from "../components/AddPhoto";
+import { View, Image, Text, KeyboardAvoidingView, TextInput, Button, Platform, StyleSheet, Pressable, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import addImg from './/..//..//assets/images/add.png'
+const RegistrationScreen = () => {
+        const [login, setLogine] = useState('')
+        const [email, setEmail] = useState('')
+        const [password, setPassword] = useState('')
+        const [passwordVisibility, setPasswordVisibility] = useState(true);
+        
+        const navigation=useNavigation()
+        
+    const onRegistrationButtonPress = () => {
+                if (!login || !email || !password) {
+                    return
+            }
+        console.log('Login:',login+', email:', email+', password:', password)
+            navigation.navigate('Home', {
+                screen:'PostsScreen'
+        })
+    }
 
-// {/*style={{ ...styles.form, marginTop: isShowKeyboard ? 0 : 147 }}> */}
+       
+        
+    const toggleShowPassword = () => {
+                setPasswordVisibility(!passwordVisibility)
+                };
 
-export default function RegistrationScreen() {
-  const [isShow, setIsShow] = useState(false);
-
-  return (
-    <View style={styles.wrapper}>
-      <AddPhoto />
-      <Text style={styles.title}>Реєстрація</Text>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={[
-          styles.keyboardAvoidingView,
-          { paddingBottom: isShow ? 10 : 0 },
-        ]}
-      >
-        <View>
-          <TextInput
-            style={styles.input}
-            placeholder="Логін"
-            placeholderTextColor="rgba(189, 189, 189, 1)"
-            onFocus={() => setIsShow(true)}
-            onBlur={() => setIsShow(false)}
-          ></TextInput>
-
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-            placeholderTextColor="rgba(189, 189, 189, 1)"
-            onFocus={() => setIsShow(true)}
-            onBlur={() => setIsShow(false)}
-          ></TextInput>
-
-          <View style={styles.viewLastImput}>
-            <TextInput
-              style={[styles.input, styles.inputLastMargin]}
-              placeholder="Пароль"
-              placeholderTextColor="rgba(189, 189, 189, 1)"
-              onFocus={() => setIsShow(true)}
-              onBlur={() => setIsShow(false)}
-            ></TextInput>
-
-            <TouchableOpacity style={styles.viewLastImputButton}>
-              <Text style={styles.viewLastImputText}>Показати</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-
-      {!isShow && (
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Зареєстуватися</Text>
-        </TouchableOpacity>
-      )}
-
-      {!isShow && (
-        <TouchableOpacity style={styles.linkLogIn}>
-          <Text style={styles.textLogIn}>Вже є акаунт? Увійти</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>     
+                <KeyboardAvoidingView 
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? '-190' : '-260'}>
+                    <View style={styles.registrationContainer}>
+                        <View style={styles.imgContainer}>
+                                <Image style={styles.addIcon} source={addImg}/>
+                        </View>
+                        <View>
+                                <Text style={styles.h2}>Peєстрація</Text>
+                        </View>
+                        <View style={styles.registrationInputContainer}>
+                                <TextInput
+                                        maxLength={26}
+                                        inputMode='text'
+                                        secureTextEntry={false}
+                                        selectionColor='blue'
+                                        textContentType='name'
+                                        placeholder="Login"
+                                        placeholderTextColor='#BDBDBD'
+                                        style={styles.registrationInput}
+                                        value={login}
+                                        onChangeText={setLogine}
+                                />
+                        </View>
+                                            
+                        <View style={styles.registrationInputContainer}>
+                                <TextInput
+                                        secureTextEntry={false}
+                                        selectionColor='blue'
+                                        inputMode='email'
+                                        keyboardType='email-address'
+                                        textContentType='emailAddress'
+                                        placeholder="Адреса електронної пошти"
+                                        placeholderTextColor='#BDBDBD'
+                                        style={styles.registrationInput}
+                                        value={email}
+                                        onChangeText={setEmail}
+                                />
+                        </View>
+                       
+                        <View style={styles.registrationInputContainer}>
+                                <TextInput
+                                        maxLength={23}
+                                        // скрыть текст    
+                                        secureTextEntry={ passwordVisibility }
+                                        selectionColor='blue'
+                                        keyboardType='visible-password'
+                                        textContentType='password'
+                                        placeholder="Пароль"
+                                        placeholderTextColor='#BDBDBD'
+                                        style={styles.registrationInput}
+                                        value={password}
+                                        onChangeText={setPassword}
+                                        //не показывает кнопку 'Enter' если пустое поле     
+                                        enablesReturnKeyAutomatically={true}
+                                />
+                                < Pressable onPress={toggleShowPassword}
+                                            hitSlop={{ left: 40, bottom: 15, top: 15, right: 15 }}>
+                                        {!passwordVisibility
+                                        ? <Text style={styles.textShowButton}>Сховати</Text>
+                                        :<Text style={styles.textShowButton}>Показати</Text>}
+                                </Pressable>                 
+                        </View>
+                        <Pressable style={styles.buttonRegistration} onPress={onRegistrationButtonPress}>
+                                        <Text style={styles.buttonText}>Зареєструватися</Text>
+                        </Pressable>
+                        <View style={styles.underButtonTextContainer}>
+                              <Text style={styles.textUnderButton}>Вже є акаунт?</Text>
+                              <Pressable onPress={()=>navigation.navigate('Login')} hitSlop={{ left: 10, bottom: 15, top: 15, right: 15 }}>
+                                  <Text style={styles.textUnderButton}>Увійти</Text>
+                              </Pressable>
+                        </View>
+                    </View>
+                                
+                </KeyboardAvoidingView>
+            </View> 
+        </TouchableWithoutFeedback>
+    )
 }
 
+
 const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "center",
-  },
+    container: {
+            flex:1,
+            justifyContent:'flex-end'
+    },
+        registrationContainer: {
+        //     height: 549,
+            width:'100%',
+            backgroundColor: '#FFFFFF',
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            paddingTop: 92,
+            paddingBottom: 78,
+    },
+        imgContainer: {
+            position: 'absolute',
+            top: -50,
+            left: '50%',
+            transform: [{ translateX: -60 }],
+            backgroundColor: '#F6F6F6',
+            width:120,
+            height: 120,
+            borderRadius: 16,
+    },
+    addIcon: {
+            height: 25,
+            width: 25,
+            position: 'absolute',
+            top: 81,
+            left: 107,
+    },
+    h2: {
+            color: '#212121',
+            textAlign: 'center',
+            fontSize: 30,
+            fontFamily: 'Roboto',
+            fontWeight: 500,
+            letterSpacing: 0.3,
+            marginBottom: 33,
+    },
+    registrationInputContainer: {
+            display: 'flex',
+            flexDirection:'row',
+            justifyContent: 'space-between',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: 16,
+            height: 50,
+            width: 343,
+            backgroundColor: '#E8E8E8',
+            paddingLeft: 16,
+            paddingTop: 15,
+            paddingBottom: 15,
+            paddingRight: 16,
+            borderRadius: 10
+        },
+    registrationInput: {
+            width: 239,
+            fontSize: 16,
+            fontFamily: 'Roboto'
+        },
+    textShowButton: {
+            color: '#1B4371',
+            fontSize: 16,
+            fontFamily: 'Roboto',
+    },
+     buttonRegistration: {
+            marginTop: 27,
+            marginBottom: 16,
+            borderRadius: 100,
+            height: 51,
+            width: 343,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent:'center',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            fontFamily: 'Roboto',
+            fontSize: 16,
+            backgroundColor: '#FF6C00'
+     },
+    underButtonTextContainer:{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent:'center',
+     },
+    textUnderButton: {
+            color: '#1B4371',
+            textAlign: 'center',
+            fontSize: 16,
+            fontFamily: 'Roboto',
+    },
+    buttonText: {
+            color: '#FFFFFF',
+            fontFamily: 'Roboto',
+            fontSize: 16,
+        }
+})
 
-  title: {
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    fontWeight: "500",
-    lineHeight: 35,
-    marginTop: 92,
-    marginBottom: 32,
-  },
-
-  input: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    height: 50,
-    width: 343,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "rgba(232, 232, 232, 1)",
-    backgroundColor: "rgba(246, 246, 246, 1)",
-    paddingLeft: 16,
-    marginBottom: 16,
-  },
-
-  inputLastMargin: {
-    marginBottom: 43,
-  },
-
-  visibleButton: {
-    height: 5,
-    width: 20,
-  },
-
-  viewLastImput: {
-    position: "relative",
-  },
-
-  viewLastImputButton: {
-    position: "absolute",
-    top: 16,
-    right: 16,
-  },
-
-  viewLastImputText: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    color: "rgba(27, 67, 113, 1)",
-  },
-
-  registerButton: {
-    backgroundColor: "rgba(255, 108, 0, 1)",
-    borderRadius: 100,
-    marginBottom: 16,
-  },
-
-  registerButtonText: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    color: "rgba(255, 255, 255, 1)",
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingRight: 111,
-    paddingLeft: 111,
-  },
-
-  linkLogIn: {},
-
-  textLogIn: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    fontWeight: "400",
-    lineHeight: 19,
-    color: "rgba(27, 67, 113, 1)",
-  },
-
-  keyboardAvoidingView: {
-    justifyContent: "center",
-    paddingBottom: 0,
-  },
-});
+export default RegistrationScreen

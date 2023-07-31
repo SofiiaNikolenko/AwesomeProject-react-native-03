@@ -1,8 +1,9 @@
- import { Text, View, StyleSheet } from "react-native"
-const PostsScreen = () => {
-    return (
+import { View, Text,StyleSheet } from "react-native"
+
+const CreatePostsScreen = () => {
+     return (
         <View style={styles.contaner}>
-                <Text>PostsScreen</Text>
+                <Text >CreatePostsScreen</Text>
         </View>
         
     )
@@ -15,5 +16,4 @@ const styles = StyleSheet.create({
         alignItems:'center'
     }
 })
-
-export default PostsScreen
+export default CreatePostsScreen

@@ -1,19 +1,19 @@
-import {
-  StyleSheet,
-  View,
-  ImageBackground,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import RegistrationScreen from "./src/screens/RegistrationScreen";
-import LoginScreen from "./src/screens/LoginScreen";
+import "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, Image } from "react-native";
 import { useFonts } from "expo-font";
-import PhotoBG from "./src/picture/PhotoBG.png";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import ImageBg from "./assets/images/photoBG.png";
+import RegistrationScreen from "./src/Screens/RegistrationScreen";
+import Home from "./src/Screens/Hom";
+import LoginScreen from "./src/Screens/LoginScreen";
+
+const MainStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("./src/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("./src/fonts/Roboto-Medium.ttf"),
+    Roboto: require("./assets/fonts/Roboto-Medium.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -21,42 +21,43 @@ export default function App() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <ImageBackground source={PhotoBG} style={styles.image}>
-          <View style={styles.overlay}>
-            <View style={styles.contentContainer}>
-              <RegistrationScreen />
-              {/* <LoginScreen /> */}
-            </View>
-          </View>
-        </ImageBackground>
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={styles.container}>
+      <Image source={ImageBg} style={styles.bg} />
+      <NavigationContainer theme={styles.navContainer}>
+        <MainStack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
+        >
+          <MainStack.Screen name="Home" component={Home} />
+          <MainStack.Screen
+            name="Registration"
+            component={RegistrationScreen}
+          />
+          <MainStack.Screen name="Login" component={LoginScreen} options={{}} />
+        </MainStack.Navigator>
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-
-  image: {
-    flex: 1,
-  },
-
-  overlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-
-  contentContainer: {
     position: "relative",
-    backgroundColor: "#fff",
+    flex: 1,
+  },
+  bg: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     width: "100%",
-    height: 549,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    alignItems: "center",
+  },
+
+  navContainer: {
+    colors: {
+      background: "transparent",
+    },
   },
 });

@@ -1,8 +1,9 @@
- import { Text, View, StyleSheet } from "react-native"
-const PostsScreen = () => {
+import { View, Text, StyleSheet } from "react-native"
+
+const CommentsScreen = () => {
     return (
         <View style={styles.contaner}>
-                <Text>PostsScreen</Text>
+                <Text >CommentsScreen</Text>
         </View>
         
     )
@@ -16,4 +17,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PostsScreen
+export default CommentsScreen
