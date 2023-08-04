@@ -12,21 +12,72 @@ import {
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import addImg from ".//..//..//assets/images/add.png";
+import { useDispatch } from "react-redux";
+import { registerDB } from "../redux/auth/operations";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
+import uuid from "react-native-uuid";
+
 const RegistrationScreen = () => {
   const [login, setLogine] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(true);
-
+  const [avatar, setAvatar] = useState("");
+  const [avatarUpload, setAvatarUpload] = useState("");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const onRegistrationButtonPress = () => {
+  const addAvatar = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0,
+    });
+
+    if (!result.canceled) {
+      setAvatarUpload(result.assets[0].uri);
+    }
+  };
+
+  const deleteAvatar = async () => {
+    setAvatarUpload(null);
+  };
+
+  const uploadAvatarToServer = async () => {
+    const storage = getStorage();
+    const uniqueAvatarId = uuid.v4();
+    const storageRef = ref(storage, `avatars/${uniqueAvatarId}`);
+
+    const response = await fetch(avatarUpload);
+    const file = await response.blob();
+
+    await uploadBytes(storageRef, file).then(() => {});
+
+    const processedPhoto = await getDownloadURL(
+      ref(storage, `avatars/${uniqueAvatarId}`)
+    )
+      .then((url) => {
+        return url;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return processedPhoto;
+  };
+
+  const submitForm = async () => {
     if (!login || !email || !password) {
       return;
     }
-    console.log("Login:", login + ", email:", email + ", password:", password);
+    const avatarRef = await uploadAvatarToServer();
+    setAvatar(avatarRef);
+    dispatch(registerDB({ email, password, login, avatar }));
+    setEmail("");
+    setLogine("");
+    setPassword("");
     navigation.navigate("Home", {
       screen: "PostsScreen",
     });
@@ -44,8 +95,18 @@ const RegistrationScreen = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? "-190" : "-260"}
         >
           <View style={styles.registrationContainer}>
-            <View style={styles.imgContainer}>
-              <Image style={styles.addIcon} source={addImg} />
+            <View style={styles.avatarContainer}>
+              {avatarUpload && (
+                <Image style={styles.avatar} source={{ uri: avatarUpload }} />
+              )}
+              <Pressable onPress={addAvatar} style={styles.addAvatarButton}>
+                <MaterialIcons
+                  style={styles.addIcon}
+                  name="add-circle-outline"
+                  size={25}
+                  color="rgba(255, 108, 0, 1)"
+                />
+              </Pressable>
             </View>
             <View>
               <Text style={styles.h2}>Peєстрація</Text>
@@ -105,10 +166,7 @@ const RegistrationScreen = () => {
                 )}
               </Pressable>
             </View>
-            <Pressable
-              style={styles.buttonRegistration}
-              onPress={onRegistrationButtonPress}
-            >
+            <Pressable style={styles.buttonRegistration} onPress={submitForm}>
               <Text style={styles.buttonText}>Зареєструватися</Text>
             </Pressable>
             <View style={styles.underButtonTextContainer}>
@@ -133,32 +191,41 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   registrationContainer: {
-    //     height: 549,
     width: "100%",
     backgroundColor: "#FFFFFF",
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    paddingTop: 92,
     paddingBottom: 78,
   },
-  imgContainer: {
-    position: "absolute",
-    top: -50,
-    left: "50%",
-    transform: [{ translateX: -60 }],
-    backgroundColor: "#F6F6F6",
+  avatarContainer: {
+    alignSelf: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    width: 120,
+    height: 120,
+    marginTop: -60,
+    backgroundColor: "grey",
+    borderRadius: 16,
+  },
+  avatar: {
     width: 120,
     height: 120,
     borderRadius: 16,
   },
-  addIcon: {
-    height: 25,
-    width: 25,
+  addAvatarButton: {
+    width: 24,
+    height: 24,
     position: "absolute",
-    top: 81,
-    left: 107,
+    top: 82,
+    left: 108,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
   },
   h2: {
     color: "#212121",

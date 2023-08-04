@@ -10,22 +10,25 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginDB } from "../redux/auth/operations";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(true);
-
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const onLoginButtonPress = () => {
+
+  const submitForm = () => {
     if (!email || !password) {
       return;
     }
-    console.log("Email:", email + ", Password:", password);
-    navigation.navigate("Home", {
-      screen: "PostsScreen",
-      params: { email, password },
-    });
+    const userData = { email, password };
+    dispatch(loginDB(userData));
+    setEmail("");
+    setPassword("");
+    navigation.navigate("Home", { screen: "PostsScreen" });
   };
 
   const toggleShowPassword = () => {
@@ -80,10 +83,7 @@ export const LoginScreen = () => {
                 )}
               </Pressable>
             </View>
-            <Pressable
-              style={styles.buttonRegistration}
-              onPress={onLoginButtonPress}
-            >
+            <Pressable style={styles.buttonRegistration} onPress={submitForm}>
               <Text style={styles.buttonText}>Увійти</Text>
             </Pressable>
             <View style={styles.underButtonTextContainer}>

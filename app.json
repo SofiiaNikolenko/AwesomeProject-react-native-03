@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AwesomeProject-react-native-03",
-    "slug": "AwesomeProject-react-native-03",
+    "name": "sofiia-nikolenko-awesome-project",
+    "slug": "sofiia-nikolenko-awesome-project",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,17 +13,31 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyA9-Ss4e-jLN8OoFDrwH-pV1IPttb7hXyk"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
-      // "softwareKeyboardLayoutMode": "pan"
+      },
+      "softwareKeyboardLayoutMode": "pan",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA9-Ss4e-jLN8OoFDrwH-pV1IPttb7hXyk"
+        }
+      },
+      "package": "com.sofiianikolenko.awesomeproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6cb50f42-5286-4a29-8c0d-d6586bd52a75"
+      }
     }
   }
 }

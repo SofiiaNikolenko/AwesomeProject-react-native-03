@@ -6,7 +6,8 @@ import ProfileScreen from "./ProfileScreen";
 import LogOutIcon from "../Components/LogOutIcon";
 import UserIcon from "../Components/UserIcon";
 import GridIcon from "../Components/GridIcon";
-import { ButtonNewPost } from "../Components/ButtonNewPost";
+import ButtonNewPost from "../Components/ButtonNewPost";
+import ArrowLeftIcon from "../Components/ArrowLeftIcon";
 
 const Tabs = createBottomTabNavigator();
 
@@ -18,23 +19,50 @@ const Home = () => {
           name="PostsScreen"
           component={PostsScreen}
           options={{
+            tabBarShowLabel: false,
             headerRight: LogOutIcon,
-            tabBarButton: GridIcon,
             title: "Публікації",
+            tabBarIcon: ({ focused, color, size }) => (
+              <GridIcon
+                name={focused ? "isActive" : "notActive"}
+                size={size}
+                color={color}
+              />
+            ),
           }}
         />
         <Tabs.Screen
           name="CreatePostsScreen"
           component={CreatePostsScreen}
           options={{
-            tabBarButton: ButtonNewPost,
+            tabBarShowLabel: false,
+            headerLeft: ArrowLeftIcon,
             title: "Створити публікацію",
+            tabBarIcon: ({ focused, color, size }) => (
+              <ButtonNewPost
+                name={focused ? "isActive" : "notActive"}
+                size={size}
+                color={color}
+              />
+            ),
+            tabBarVisible: false,
+            tabBarStyle: { display: "none" },
           }}
         />
         <Tabs.Screen
           name="ProfileScreen"
           component={ProfileScreen}
-          options={{ tabBarButton: UserIcon }}
+          options={{
+            tabBarShowLabel: false,
+            headerShown: false,
+            tabBarIcon: ({ focused, color, size }) => (
+              <UserIcon
+                name={focused ? "isActive" : "notActive"}
+                size={size}
+                color={color}
+              />
+            ),
+          }}
         />
       </Tabs.Navigator>
     </View>
@@ -47,11 +75,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "white",
   },
   headerStyles: {
-    tabBarShowLabel: false,
+    tabBarShowLabel: true,
     tabBarStyle: {
+      backgroundColor: "white",
       paddingTop: 9,
       display: "flex",
       alignItems: "center",
@@ -79,5 +107,13 @@ const styles = StyleSheet.create({
       shadowRadius: 1.84,
       elevation: 0,
     },
+  },
+  postScreenOptions: {
+    headerRight: LogOutIcon,
+    title: "Публікації",
+  },
+  createPostsScreenOptions: {
+    headerLeft: ArrowLeftIcon,
+    title: "Створити публікацію",
   },
 });

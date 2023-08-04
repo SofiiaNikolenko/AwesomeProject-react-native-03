@@ -8,6 +8,14 @@ import ImageBg from "./assets/images/photoBG.png";
 import RegistrationScreen from "./src/Screens/RegistrationScreen";
 import Home from "./src/Screens/Hom";
 import LoginScreen from "./src/Screens/LoginScreen";
+import MapScreen from "./src/Screens/MapScreen";
+import CommentsScreen from "./src/Screens/CommentsScreen";
+import ArrowLeftIcon from "./src/Components/ArrowLeftIcon";
+import store from "./src/redux/store";
+import { Provider } from "react-redux";
+import { authStateChanged } from "./src/redux/auth/operations";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const MainStack = createStackNavigator();
 
@@ -21,23 +29,41 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <Image source={ImageBg} style={styles.bg} />
-      <NavigationContainer theme={styles.navContainer}>
-        <MainStack.Navigator
-          initialRouteName="Login"
-          screenOptions={{ headerShown: false }}
-        >
-          <MainStack.Screen name="Home" component={Home} />
-          <MainStack.Screen
-            name="Registration"
-            component={RegistrationScreen}
-          />
-          <MainStack.Screen name="Login" component={LoginScreen} options={{}} />
-        </MainStack.Navigator>
-        <StatusBar style="auto" />
-      </NavigationContainer>
-    </View>
+    <Provider store={store.store}>
+      <View style={styles.container}>
+        <Image source={ImageBg} style={styles.bg} />
+        <NavigationContainer theme={styles.navContainer}>
+          <MainStack.Navigator initialRouteName="Login">
+            <MainStack.Screen
+              name="Home"
+              component={Home}
+              options={{ headerShown: false }}
+            />
+            <MainStack.Screen
+              name="Registration"
+              component={RegistrationScreen}
+              options={{ headerShown: false }}
+            />
+            <MainStack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <MainStack.Screen
+              name="MapScreen"
+              component={MapScreen}
+              options={{ headerShown: false }}
+            />
+            <MainStack.Screen
+              name="CommentsScreen"
+              component={CommentsScreen}
+              options={styles.CommentsScreen}
+            />
+          </MainStack.Navigator>
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </View>
+    </Provider>
   );
 }
 
@@ -54,10 +80,28 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
   },
-
   navContainer: {
     colors: {
       background: "transparent",
+    },
+  },
+  CommentsScreen: {
+    headerLeft: ArrowLeftIcon,
+    title: "Коментарі",
+    headerRightContainerStyle: { paddingRight: 16 },
+    headerLeftContainerStyle: { paddingLeft: 16 },
+    headerTintColor: "rgba(33, 33, 33, 1)",
+    headerStyle: {
+      backgroundColor: "#FFFFFF",
+      height: 100,
+      shadowOffset: {
+        width: 0,
+        height: 0.5,
+      },
+      shadowColor: "#212121CC",
+      shadowOpacity: 0.3,
+      shadowRadius: 1.84,
+      elevation: 0,
     },
   },
 });

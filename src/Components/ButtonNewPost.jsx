@@ -1,20 +1,27 @@
 import { Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-export const ButtonNewPost = () => {
+import { useNavigation } from "@react-navigation/native";
+const ButtonNewPost = ({ name, size, color }) => {
+  const navigation = useNavigation();
+  const navigateToCreatePostsScreen = (event) => {
+    navigation.navigate("CreatePostsScreen");
+  };
   return (
     <Pressable
-      style={styles.button}
-      onPress={() => {
-        console.log("ButtonNewPost");
-      }}
+      style={name === "isActive" ? styles.activeButton : styles.notActiveButton}
+      onPress={navigateToCreatePostsScreen}
     >
-      <Ionicons name="add-outline" size={24} color="#FFFFFF" />
+      <Ionicons
+        name="add-outline"
+        size={24}
+        color={name === "isActive" ? "#FFFFFF" : "#212121CC"}
+      />
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
+  activeButton: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -25,4 +32,10 @@ const styles = StyleSheet.create({
     marginLeft: 39,
     marginRight: 39,
   },
+  notActiveButton: {
+    paddingTop: 8,
+    backgroundColor: "white",
+  },
 });
+
+export default ButtonNewPost;
